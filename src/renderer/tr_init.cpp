@@ -362,6 +362,11 @@ static void GLW_InitTextureCompression(void) {
 	}
 }
 
+#ifdef ANDROID
+#include "gl4esinit.h"
+#define WIN_GL_GetProcAddress gl4es_GetProcAddress
+#endif // ANDROID
+
 extern bool g_bDynamicGlowSupported;
 bool g_bTextureRectangleHack;
 
@@ -660,6 +665,10 @@ static void InitOpenGL(void) {
 		GL_SetDefaultState();
 	}
 }
+
+#ifdef ANDROID
+#undef WIN_GL_GetProcAddress
+#endif // ANDROID
 
 /*
 ==================

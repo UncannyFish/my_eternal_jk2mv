@@ -26,6 +26,10 @@
 #	include <gl.h>
 #endif
 
+#ifdef ANDROID
+#define GL_GLEXT_PROTOTYPES 1
+#endif
+
 #include "glext.h"
 
 #define qglAccum glAccum

@@ -26,6 +26,8 @@ if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif(MSVC)
 
+add_definitions(-DUSE_FILE32API)
+
 add_library(minizip STATIC ioapi.c unzip.c)
 
 # Let consumers get at our bundled copy in the standard CMake way.  These

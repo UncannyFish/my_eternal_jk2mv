@@ -2,6 +2,7 @@
  ** The MIT License (MIT)
  **
  ** Copyright (c) 2015-2017 EXL
+ ** Copyright (c) 2023 Ilya Shabalin
  **
  ** Permission is hereby granted, free of charge, to any person obtaining a copy
  ** of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +23,62 @@
  ** SOFTWARE.
  ************************************************************************************/
 
-package ru.exlmoto.gish;
+package org.mvdevs.jk2mv;
 
+import android.content.Context;
 import android.view.KeyEvent;
-
-import org.libsdl.app.SDLActivity;
+import android.view.MotionEvent;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GishTouchOverlayView {
+public class JK2MVTouchOverlayView extends View {
+	private List<JK2MVButton> initializedButtons = null;
 
-	private List<GishButton> initializedButtons = null;
-
-	public GishTouchOverlayView() {
+	public JK2MVTouchOverlayView(Context context) {
+		super(context);
 		initButtonsRects();
 	}
 
+	// Touch events
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		int touchId = event.getPointerCount() - 1;
+		if (touchId < 0) {
+			return false;
+		}
+
+		float touchX = event.getX(touchId) / getWidth();
+		float touchY = event.getY(touchId) / getHeight();
+
+		switch (event.getAction() & MotionEvent.ACTION_MASK) {
+			case MotionEvent.ACTION_DOWN:
+				checkTouchButtons(touchX, touchY, touchId);
+				pressSingleTouchButtons();
+				break;
+			case MotionEvent.ACTION_POINTER_DOWN:
+				checkTouchButtons(touchX, touchY, touchId);
+				pressMultiTouchButtons();
+				break;
+			case MotionEvent.ACTION_POINTER_UP:
+				checkTouchButtons(touchX, touchY, touchId);
+				releaseMultiTouchButtons(touchId);
+				break;
+			case MotionEvent.ACTION_UP:
+				releaseAllButtons();
+				break;
+			default:
+				break;
+		}
+
+		//return JK2MVActivity.onMyTouchEvent(event);
+
+		return true;
+	}
+
 	public void checkTouchButtons(float touchX, float touchY, int touchId) {
-		for (GishButton button : initializedButtons) {
+		for (JK2MVButton button : initializedButtons) {
 			if (button.checkButtonRect(touchX, touchY)) {
 				button.setTouchId(touchId);
 			}
@@ -48,7 +86,7 @@ public class GishTouchOverlayView {
 	}
 
 	public void pressSingleTouchButtons() {
-		for (GishButton button : initializedButtons) {
+		for (JK2MVButton button : initializedButtons) {
 			if (button.getTouchId() == 0) {
 				button.press();
 			}
@@ -56,7 +94,7 @@ public class GishTouchOverlayView {
 	}
 
 	public void pressMultiTouchButtons() {
-		for (GishButton button : initializedButtons) {
+		for (JK2MVButton button : initializedButtons) {
 			if (button.getTouchId() > 0 && !button.getState()) {
 				button.press();
 			}
@@ -64,7 +102,7 @@ public class GishTouchOverlayView {
 	}
 
 	public void releaseMultiTouchButtons(int touchId) {
-		for (GishButton button : initializedButtons) {
+		for (JK2MVButton button : initializedButtons) {
 			if (button.getTouchId() == touchId) {
 				button.release();
 			}
@@ -72,7 +110,7 @@ public class GishTouchOverlayView {
 	}
 
 	public void releaseAllButtons() {
-		for (GishButton button : initializedButtons) {
+		for (JK2MVButton button : initializedButtons) {
 			button.release();
 			button.setTouchId(-1);
 		}
@@ -107,39 +145,75 @@ public class GishTouchOverlayView {
 		 **     float height = 475.0 / 480.0;
 		 ************************************************************************************/
 
-		initializedButtons = new ArrayList<GishButton>();
-		initializedButtons.add(new GishButton("Left", 0.0421f, 0.6583f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_DPAD_LEFT));
-		initializedButtons.add(new GishButton("Down", 0.2295f, 0.6583f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_DPAD_DOWN));
-		initializedButtons.add(new GishButton("Right", 0.4180f, 0.6583f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_DPAD_RIGHT));
-		initializedButtons.add(new GishButton("Up", 0.2295f, 0.3250f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_DPAD_UP));
-		initializedButtons.add(new GishButton("A", 0.8079f, 0.3250f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_A));
-		initializedButtons.add(new GishButton("Space", 0.8079f, 0.6604f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_SPACE));
-		initializedButtons.add(new GishButton("Enter", 0.5503f, 0.0333f, 0.1218f, 0.2166f, KeyEvent.KEYCODE_ENTER));
-		initializedButtons.add(new GishButton("S", 0.7025f, 0.0333f, 0.1218f, 0.2166f, KeyEvent.KEYCODE_S));
-		initializedButtons.add(new GishButton("D", 0.8548f, 0.0333f, 0.1218f, 0.2166f, KeyEvent.KEYCODE_D));
+		initializedButtons = new ArrayList<JK2MVButton>();
+		//initializedButtons.add(new JK2MVButton("Left", 0.0421f, 0.6583f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_DPAD_LEFT));
+		//initializedButtons.add(new JK2MVButton("Down", 0.2295f, 0.6583f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_DPAD_DOWN));
+		//initializedButtons.add(new JK2MVButton("Right", 0.4180f, 0.6583f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_DPAD_RIGHT));
+		//initializedButtons.add(new JK2MVButton("Up", 0.2295f, 0.3250f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_DPAD_UP));
+		//initializedButtons.add(new JK2MVButton("A", 0.8079f, 0.3250f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_A));
+		//initializedButtons.add(new JK2MVButton("Space", 0.8079f, 0.6604f, 0.1569f, 0.2792f, KeyEvent.KEYCODE_SPACE));
+		//initializedButtons.add(new JK2MVButton("Enter", 0.5503f, 0.0333f, 0.1218f, 0.2166f, KeyEvent.KEYCODE_ENTER));
+		//initializedButtons.add(new JK2MVButton("S", 0.7025f, 0.0333f, 0.1218f, 0.2166f, KeyEvent.KEYCODE_S));
+		//initializedButtons.add(new JK2MVButton("D", 0.8548f, 0.0333f, 0.1218f, 0.2166f, KeyEvent.KEYCODE_D));
+		initializedButtons.add(new JK2MVButton("+attack", 0.7949f, 0.4681f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_CTRL_LEFT));
+		initializedButtons.add(new JK2MVButton("+altattack", 0.9049f, 0.4681f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_ALT_LEFT));
+		initializedButtons.add(new JK2MVButton("+back", 0.0928f, 0.8347f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_S));
+		initializedButtons.add(new JK2MVButton("+forward", 0.0928f, 0.5514f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_W));
+		initializedButtons.add(new JK2MVButton("+movedown", 0.9237f, 0.8583f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_C));
+		initializedButtons.add(new JK2MVButton("+moveleft", 0.0180f, 0.6958f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_A));
+		initializedButtons.add(new JK2MVButton("+moveright", 0.1677f, 0.6958f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_D));
+		initializedButtons.add(new JK2MVButton("+moveup", 0.9237f, 0.1667f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_SPACE));
+		initializedButtons.add(new JK2MVButton("+scores", 0.2425f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_TAB));
+		initializedButtons.add(new JK2MVButton("+speed", 0.0928f, 0.6958f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_SHIFT_LEFT));
+		initializedButtons.add(new JK2MVButton("+use", 0.6168f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_E));
+		initializedButtons.add(new JK2MVButton("+useforce", 0.8862f, 0.3153f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_F));
+		initializedButtons.add(new JK2MVButton("+button2", 0.8024f, 0.3153f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_ENTER));
+		//initializedButtons.add(new JK2MVButton("cg_thirdperson !", 0.0f, 0.0f, 0.0f, 0.0f, KeyEvent.KEYCODE_P));
+		initializedButtons.add(new JK2MVButton("engage_duel", 0.5000f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_K));
+		initializedButtons.add(new JK2MVButton("forcenext", 0.6168f, 0.8583f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_X));
+		initializedButtons.add(new JK2MVButton("forceprev", 0.3129f, 0.8583f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_Z));
+		initializedButtons.add(new JK2MVButton("invnext", 0.0015f, 0.1847f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_RIGHT_BRACKET));
+		initializedButtons.add(new JK2MVButton("invprev", 0.0015f, 0.3986f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_LEFT_BRACKET));
+		initializedButtons.add(new JK2MVButton("messagemode", 0.0816f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_Y));
+		//initializedButtons.add(new JK2MVButton("messagemode2", 0.0f, 0.0f, 0.0f, 0.0f, KeyEvent.KEYCODE_T));
+		//initializedButtons.add(new JK2MVButton("messagemode3", 0.0f, 0.0f, 0.0f, 0.0f, KeyEvent.KEYCODE_U));
+		//initializedButtons.add(new JK2MVButton("messagemode4", 0.0f, 0.0f, 0.0f, 0.0f, KeyEvent.KEYCODE_I));
+		initializedButtons.add(new JK2MVButton("saberAttackCycle", 0.1609f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_L));
+		//initializedButtons.add(new JK2MVButton("scoresDown", 0.0f, 0.0f, 0.0f, 0.0f, KeyEvent.KEYCODE_FORWARD_DEL));
+		//initializedButtons.add(new JK2MVButton("scoresUp", 0.0f, 0.0f, 0.0f, 0.0f, KeyEvent.KEYCODE_INSERT));
+		initializedButtons.add(new JK2MVButton("toggleconsole", 0.9237f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_GRAVE));
+		initializedButtons.add(new JK2MVButton("weapnext", 0.6168f, 0.7056f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_R));
+		initializedButtons.add(new JK2MVButton("weapprev", 0.3129f, 0.7056f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_Q));
+		initializedButtons.add(new JK2MVButton("escape", 0.0015f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_ESCAPE));
+		initializedButtons.add(new JK2MVButton("showKeyboard", 0.3443f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_M));
+
+		initializedButtons.add(new JK2MVButton("diagonalFL", 0.0180f, 0.5514f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_W));
+		initializedButtons.add(new JK2MVButton("diagonalFL2", 0.0180f, 0.5514f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_A));
+
+		initializedButtons.add(new JK2MVButton("diagonalFR", 0.1677f, 0.5514f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_W));
+		initializedButtons.add(new JK2MVButton("diagonalFR2", 0.1677f, 0.5514f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_D));
+
+		initializedButtons.add(new JK2MVButton("diagonalBL", 0.0180f, 0.8347f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_S));
+		initializedButtons.add(new JK2MVButton("diagonalBL2", 0.0180f, 0.8347f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_A));
+
+		initializedButtons.add(new JK2MVButton("diagonalBR", 0.1677f, 0.8347f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_S));
+		initializedButtons.add(new JK2MVButton("diagonalBR2", 0.1677f, 0.8347f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_D));
 	}
 
-	private class GishButton {
-
-		private final int VIBRO_OFFSET = 20;
-
+	private class JK2MVButton {
 		private final float m_x0;
 		private final float m_y0;
 		private final float m_x1;
 		private final float m_y1;
 
 		private final int m_buttonCode;
+		// Useful for DEBUG
+		private final String m_buttonName;
 		private boolean m_buttonPushed = false;
-
 		// -1 for no touches on button
 		private int m_buttonTouchId = -1;
 
-		// Useful for DEBUG
-		private final String m_buttonName;
-
-		public GishButton(String buttonName,
-						  float x, float y, float width, float height,
-						  int keyCode) {
+		public JK2MVButton(String buttonName, float x, float y, float width, float height, int keyCode) {
 			m_buttonName = buttonName;
 			m_x0 = x;
 			m_y0 = y;
@@ -149,20 +223,21 @@ public class GishTouchOverlayView {
 		}
 
 		public boolean checkButtonRect(float touchX, float touchY) {
-			return (touchX > m_x0 &&
-				touchX < m_x1 &&
-				touchY > m_y0 &&
-				touchY < m_y1);
+			return (touchX > m_x0 && touchX < m_x1 && touchY > m_y0 && touchY < m_y1);
 		}
 
 		public void press() {
 			m_buttonPushed = true;
 
-			if (true) {
-				GishActivity.doVibrate(50 - VIBRO_OFFSET, 0);
+			if (m_buttonCode == KeyEvent.KEYCODE_M) {
+				JK2MVActivity.showTextInput(0, 0, 640, 480);
 			}
 
-			SDLActivity.onNativeKeyDown(m_buttonCode);
+			if (m_buttonCode == KeyEvent.KEYCODE_ESCAPE) {
+				JK2MVActivity.onNativeKeyDown(KeyEvent.KEYCODE_BACK);
+			}
+
+			JK2MVActivity.onNativeKeyDown(m_buttonCode);
 		}
 
 		public void release() {
@@ -170,7 +245,7 @@ public class GishTouchOverlayView {
 
 			m_buttonTouchId = -1;
 
-			SDLActivity.onNativeKeyUp(m_buttonCode);
+			JK2MVActivity.onNativeKeyUp(m_buttonCode);
 		}
 
 		@SuppressWarnings("unused")

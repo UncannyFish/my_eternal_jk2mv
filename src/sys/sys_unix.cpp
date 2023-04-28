@@ -341,6 +341,16 @@ char *Sys_LinuxGetInstallPrefix() {
 }
 #endif
 
+#ifdef ANDROID
+#include "SDL.h"
+//void Q_strncpyz(char *dest, const char *src, int destsize)
+char *Sys_DefaultInstallPath(void)
+{
+	static char path[MAX_OSPATH];
+	Q_strncpyz(path, SDL_AndroidGetExternalStoragePath(), sizeof(path));
+	return path;
+}
+#else
 char *Sys_DefaultInstallPath(void)
 {
     if (*installPath) {
@@ -373,12 +383,22 @@ char *Sys_DefaultInstallPath(void)
 #endif
     }
 }
+#endif // ANDROID
 
 void Sys_SetDefaultHomePath(const char *path)
 {
 	Q_strncpyz(homePath, path, sizeof(homePath));
 }
 
+#ifdef ANDROID
+#include "SDL.h"
+char *Sys_DefaultHomePath(void)
+{
+	static char path[MAX_OSPATH];
+	Q_strncpyz(path, SDL_AndroidGetExternalStoragePath(), sizeof(path));
+	return path;
+}
+#else
 // if dedicated, i think it's a good idea to default fs_homepath to fs_basepath on unix, too
 // remember it's only the default value
 char *Sys_DefaultHomePath(void)
@@ -407,6 +427,7 @@ char *Sys_DefaultHomePath(void)
     return Sys_Cwd();
 #endif
 }
+#endif // ANDROID
 
 // try to find assets from /Applications (Appstore JK2) or Steam
 // if not found try to find it in the same directory this app is

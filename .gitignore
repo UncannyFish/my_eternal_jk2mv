@@ -99,3 +99,9 @@ GPATH
 
 # ignore all subdirectories of the build directory
 /build/*/*
+android-project/.gradle
+android-project/.idea
+android-project/app/.cxx
+android-project/app/build
+android-project/app/jni/SDL
+android-project/app/release

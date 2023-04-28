@@ -23,12 +23,14 @@ set(ProjectName "JK2MV" CACHE STRING "Project Name")
 set(ProjectURL "https://jk2mv.org")
 project(${ProjectName})
 
-include(GetGitRevisionDescription)
-git_describe(MV_VERSION --tags)
-if(NOT MV_VERSION OR MV_VERSION STREQUAL "GIT-NOTFOUND" OR MV_VERSION STREQUAL "HEAD-HASH-NOTFOUND")
-	set(MV_VERSION "UNKNOWN")
-	message(WARNING "Could not find git or git repository. Install git and make sure you actually cloned the repository (Directory named .git must exist) for correct versioning.")
-endif()
+#include(GetGitRevisionDescription)
+#git_describe(MV_VERSION --tags)
+#if(NOT MV_VERSION OR MV_VERSION STREQUAL "GIT-NOTFOUND" OR MV_VERSION STREQUAL "HEAD-HASH-NOTFOUND")
+#	set(MV_VERSION "UNKNOWN")
+#	message(WARNING "Could not find git or git repository. Install git and make sure you actually cloned the repository (Directory named .git must exist) for correct versioning.")
+#endif()
+
+set(MV_VERSION "1.4-309-g3c1c228")
 
 message(STATUS "${ProjectName} Version: ${MV_VERSION}")
 
