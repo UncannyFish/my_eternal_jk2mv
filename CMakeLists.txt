@@ -145,6 +145,7 @@ else()
 		set(Architecture "arm64")
 		set(ARCH_ARM64 ON)
 	elseif(SystemProcessor MATCHES "^arm")
+		set(GlobalDefines ${GlobalDefines} "NO_VM_COMPILED")
 		set(GlobalDefines ${GlobalDefines} "ARCH_ARM32")
 		set(Architecture "arm")
 		set(ARCH_ARM32 ON)
@@ -260,8 +261,8 @@ elseif ((${CMAKE_C_COMPILER_ID} STREQUAL GNU) OR (${CMAKE_C_COMPILER_ID} MATCHES
 	endif()
 
 	# Optimization
-	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -flto")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto")
 
 	# General
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g1 -fno-omit-frame-pointer")
@@ -297,6 +298,9 @@ elseif ((${CMAKE_C_COMPILER_ID} STREQUAL GNU) OR (${CMAKE_C_COMPILER_ID} MATCHES
 	elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES Clang|AppleClang)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-char-subscripts -Wno-self-assign")
 	endif()
+	
+	set(CMAKE_C_FLAGS_RELWITHDEBINFO ${CMAKE_C_FLAGS_RELEASE})
+	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO ${CMAKE_CXX_FLAGS_RELEASE})
 else()
 	message(FATAL_ERROR "Unsupported compiler")
 endif()

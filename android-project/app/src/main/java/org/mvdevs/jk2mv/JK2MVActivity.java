@@ -57,4 +57,5 @@ public class JK2MVActivity extends SDLActivity {
 			LayoutParams.MATCH_PARENT,
 			LayoutParams.MATCH_PARENT));
 	}
+	public static native void toggleKeyboard();
 }

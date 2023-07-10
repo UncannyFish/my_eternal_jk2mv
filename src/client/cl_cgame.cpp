@@ -1329,6 +1329,22 @@ Ghoul2 Insert End
 	return 0;
 }
 
+#ifdef ANDROID
+#include <jni.h>
+#include "SDL.h"
+
+extern "C" JNIEXPORT void JNICALL Java_org_mvdevs_jk2mv_JK2MVActivity_toggleKeyboard(JNIEnv *env, jobject obj)
+{
+	if (SDL_IsTextInputActive())
+	{
+		SDL_StopTextInput();
+	}
+	else
+	{
+		SDL_StartTextInput();
+	}
+}
+#endif
 
 /*
 ====================

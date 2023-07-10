@@ -30,11 +30,14 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.libsdl.app.SDLActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class JK2MVTouchOverlayView extends View {
 	private List<JK2MVButton> initializedButtons = null;
+	private MotionEvent m_event;
 
 	public JK2MVTouchOverlayView(Context context) {
 		super(context);
@@ -157,11 +160,11 @@ public class JK2MVTouchOverlayView extends View {
 		//initializedButtons.add(new JK2MVButton("D", 0.8548f, 0.0333f, 0.1218f, 0.2166f, KeyEvent.KEYCODE_D));
 		initializedButtons.add(new JK2MVButton("+attack", 0.7949f, 0.4681f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_CTRL_LEFT));
 		initializedButtons.add(new JK2MVButton("+altattack", 0.9049f, 0.4681f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_ALT_LEFT));
-		initializedButtons.add(new JK2MVButton("+back", 0.0928f, 0.8347f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_S));
-		initializedButtons.add(new JK2MVButton("+forward", 0.0928f, 0.5514f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_W));
+		initializedButtons.add(new JK2MVButton("+back", 0.0928f, 0.8347f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_DPAD_DOWN));
+		initializedButtons.add(new JK2MVButton("+forward", 0.0928f, 0.5514f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_DPAD_UP));
 		initializedButtons.add(new JK2MVButton("+movedown", 0.9237f, 0.8583f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_C));
-		initializedButtons.add(new JK2MVButton("+moveleft", 0.0180f, 0.6958f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_A));
-		initializedButtons.add(new JK2MVButton("+moveright", 0.1677f, 0.6958f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_D));
+		initializedButtons.add(new JK2MVButton("+moveleft", 0.0180f, 0.6958f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_DPAD_LEFT));
+		initializedButtons.add(new JK2MVButton("+moveright", 0.1677f, 0.6958f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_DPAD_RIGHT));
 		initializedButtons.add(new JK2MVButton("+moveup", 0.9237f, 0.1667f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_SPACE));
 		initializedButtons.add(new JK2MVButton("+scores", 0.2425f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_TAB));
 		initializedButtons.add(new JK2MVButton("+speed", 0.0928f, 0.6958f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_SHIFT_LEFT));
@@ -185,7 +188,7 @@ public class JK2MVTouchOverlayView extends View {
 		initializedButtons.add(new JK2MVButton("weapnext", 0.6168f, 0.7056f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_R));
 		initializedButtons.add(new JK2MVButton("weapprev", 0.3129f, 0.7056f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_Q));
 		initializedButtons.add(new JK2MVButton("escape", 0.0015f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_ESCAPE));
-		initializedButtons.add(new JK2MVButton("showKeyboard", 0.3443f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_M));
+		initializedButtons.add(new JK2MVButton("toggleKeyboard", 0.3443f, 0.0028f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_NUMPAD_LEFT_PAREN));
 
 		initializedButtons.add(new JK2MVButton("diagonalFL", 0.0180f, 0.5514f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_W));
 		initializedButtons.add(new JK2MVButton("diagonalFL2", 0.0180f, 0.5514f, 0.0749f, 0.1389f, KeyEvent.KEYCODE_A));
@@ -228,14 +231,20 @@ public class JK2MVTouchOverlayView extends View {
 
 		public void press() {
 			m_buttonPushed = true;
-
-			if (m_buttonCode == KeyEvent.KEYCODE_M) {
-				JK2MVActivity.showTextInput(0, 0, 640, 480);
+			if (m_buttonCode == KeyEvent.KEYCODE_ESCAPE && JK2MVActivity.isScreenKeyboardShown()) {
+				JK2MVActivity.onNativeKeyboardFocusLost();
+				return;
 			}
 
-			if (m_buttonCode == KeyEvent.KEYCODE_ESCAPE) {
-				JK2MVActivity.onNativeKeyDown(KeyEvent.KEYCODE_BACK);
+			if (m_buttonCode == KeyEvent.KEYCODE_NUMPAD_LEFT_PAREN) {
+				JK2MVActivity.toggleKeyboard();
+				return;
 			}
+
+			//if (m_buttonCode == KeyEvent.KEYCODE_RIGHT_BRACKET) {
+			//	JK2MVActivity.onMyTouchEvent(m_event);
+			//	return;
+			//}
 
 			JK2MVActivity.onNativeKeyDown(m_buttonCode);
 		}
