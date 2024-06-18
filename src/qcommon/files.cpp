@@ -2314,7 +2314,11 @@ static const char **FS_ListFilteredFiles( const char *path, const char *extensio
 					if (pathLength) {
 						temp++;		// include the '/'
 					}
-					nfiles = FS_AddFileToList( name + temp, list, nfiles );
+					name = &name[temp];
+					if (*name == '\0') {
+						continue;
+					}
+					nfiles = FS_AddFileToList( name, list, nfiles );
 				}
 			}
 		} else if (search->dir) { // scan for files in the filesystem
