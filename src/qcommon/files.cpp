@@ -2944,6 +2944,79 @@ static void FS_Restart_f( void ) {
 	FS_Restart2( fs_checksumFeed, qtrue );
 }
 
+static void FS_UnpackFile_f(void)
+{
+	char *fileBuffer = NULL;
+	int fileSize = 0;
+	char *fileName = NULL;
+	char unpackPath[MAX_QPATH + 8] = "";
+	if (Cmd_Argc() != 2)
+	{
+		Com_Printf("Usage: unpackFile <file>\n");
+		return;
+	}
+	fileName = Cmd_Argv(1);
+	fileSize = FS_ReadFile(fileName, (void **) &fileBuffer);
+	if (fileSize < 0 || fileBuffer == NULL)
+	{
+		Com_Printf("Failed to unpack file \"%s\"\n", fileName);
+		return;
+	}
+	Com_sprintf(unpackPath, sizeof(unpackPath), "unpack/%s", fileName);
+	FS_WriteFile(unpackPath, fileBuffer, fileSize);
+	FS_FreeFile(fileBuffer);
+}
+
+static void FS_UnpackDirectory_f(void)
+{
+	char *directory = NULL;
+	char *extension = NULL;
+	const char **fileName = NULL;
+	char filePath[MAX_QPATH] = "";
+	int filesCount = 0;
+	int i = 0;
+	int fileSize = 0;
+	char *fileBuffer = NULL;
+	char unpackPath[MAX_QPATH + 8] = "";
+	char *filePathEnding = NULL;
+	size_t filePathLength = 0;
+	if (Cmd_Argc() < 2 || Cmd_Argc() > 3)
+	{
+		Com_Printf("Usage: unpackDirectory <directory> [extension]\n");
+		return;
+	}
+	if (Cmd_Argc() == 2)
+	{
+		directory = Cmd_Argv(1);
+		extension = "";
+	}
+	else
+	{
+		directory = Cmd_Argv(1);
+		extension = Cmd_Argv(2);
+	}
+	fileName = FS_ListFiles2(directory, extension, &filesCount);
+	for (i = 0; i < filesCount; i++)
+	{
+		Com_sprintf(filePath, sizeof(filePath), "%s/%s", directory, fileName[i]);
+		filePathLength = strlen(filePath);
+		if (filePath[filePathLength - 1] == '/')
+		{
+			continue;
+		}
+		fileSize = FS_ReadFile(filePath, (void **)&fileBuffer);
+		if (fileSize < 0 || fileBuffer == NULL)
+		{
+			Com_Printf("Failed to unpack file \"%s\"\n", filePath);
+			continue;
+		}
+		Com_sprintf(unpackPath, sizeof(unpackPath), "unpack/%s", filePath);
+		FS_WriteFile(unpackPath, fileBuffer, fileSize);
+		FS_FreeFile(fileBuffer);
+	}
+	FS_FreeFileList(fileName);
+}
+
 //===========================================================================
 
 
@@ -3339,6 +3412,8 @@ void FS_Shutdown( qboolean closemfp, qboolean keepModuleFiles ) {
 	Cmd_RemoveCommand( "which" );
 	Cmd_RemoveCommand( "flushFiles" );
 	Cmd_RemoveCommand( "fs_restart" );
+	Cmd_RemoveCommand( "unpackFile" );
+	Cmd_RemoveCommand( "unpackDirectory" );
 }
 
 static void FS_AddGameDirectories(const char *gameName)
@@ -3550,6 +3625,8 @@ static void FS_Startup( const char *gameName ) {
 	Cmd_AddCommand ("which", FS_Which_f );
 	Cmd_AddCommand ("flushFiles", FS_Flush_f );
 	Cmd_AddCommand ("fs_restart", FS_Restart_f );
+	Cmd_AddCommand ("unpackFile", FS_UnpackFile_f);
+	Cmd_AddCommand ("unpackDirectory", FS_UnpackDirectory_f);
 
 	// print the current search paths
 	FS_Path_f();
