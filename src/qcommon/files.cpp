@@ -3566,10 +3566,17 @@ static void FS_AddGameDirectories2(void)
 		Q_strncpyz(gamePath, token, sizeof(gamePath));
 		FS_AddGameDirectory(gamePath, gameDirectory, isDirectoryJK2, isDirectoryJKA);
 	}
+	if (Q_stricmp(gameDirectory, BASEGAME) == 0)
+	{
+		Cvar_Set("fs_game", "");
+	}
+	else
+	{
+		Cvar_Set("fs_game", gameDirectory);
+	}
 	Cvar_Set("fs_basepath", gamePath);
 	Cvar_Set("fs_basegame", gameDirectory);
 	Cvar_Set("fs_homepath", gamePath);
-	Cvar_Set("fs_game", gameDirectory);
 	Cvar_Set("fs_forcegame", gameDirectory);
 	Cvar_Set("fs_assetspath", gamePath);
 	Cvar_Set("fs_assetspathjka", gamePath);
