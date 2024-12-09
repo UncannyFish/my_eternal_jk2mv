@@ -317,11 +317,11 @@ Q_NORETURN void QDECL Com_Error( errorParm_t code, const char *fmt, ... ) {
 
 	// when we are running automated scripts, make sure we
 	// know if anything failed
-	if ( com_buildScript && com_buildScript->integer ) {
+	if ( com_buildScript != NULL && com_buildScript->integer ) {
 		code = ERR_FATAL;
 	}
 
-	if (com_exitOnError->integer)
+	if (com_exitOnError != NULL && com_exitOnError->integer)
 	{
 		code = ERR_FATAL;
 	}
