@@ -3628,6 +3628,10 @@ static void FS_AddGameDirectories2(void)
 	qboolean isDirectoryJKA;
 	char gamePath[MAX_TOKEN_CHARS];      // C:\jk2
 	char gameDirectory[MAX_TOKEN_CHARS]; // C:\jk2\base
+	if (fs_directories->string[0] == '\0')
+	{
+		return;
+	}
 	filePointer = fopen(fs_directories->string, "rb");
 	if (filePointer == NULL)
 	{
@@ -3745,11 +3749,16 @@ static void FS_Startup( const char *gameName ) {
 	fs_dirBeforePak = Cvar_Get ("fs_dirBeforePak", "1", CVAR_INIT | CVAR_VM_NOWRITE );
 	fs_maxFoundFiles = Cvar_Get("fs_maxFoundFiles", "16384", CVAR_INIT | CVAR_VM_NOWRITE);
 	r_autoOverBrightBits = Cvar_Get("r_autoOverBrightBits", "1", CVAR_ARCHIVE | CVAR_GLOBAL);
-	fs_directories = Cvar_Get("fs_directories", "directories.txt", CVAR_INIT | CVAR_VM_NOWRITE);
 	fs_assetspath = Cvar_Get("fs_assetspath", Sys_DefaultAssetsPath(), CVAR_INIT | CVAR_VM_NOWRITE);
 	fs_assetspathjka = Cvar_Get("fs_assetspathjka", Sys_DefaultAssetsPathJKA(), CVAR_INIT | CVAR_VM_NOWRITE);
 	fs_basejka = Cvar_Get("fs_basejka", fs_assetspathjka->string[0] ? "base" : "basejka", CVAR_INIT | CVAR_VM_NOWRITE);
 	fs_loadjka = Cvar_Get("fs_loadjka", "1", CVAR_ARCHIVE | CVAR_LATCH);
+
+#ifdef PORTABLE
+	fs_directories = Cvar_Get("fs_directories", "directories.txt", CVAR_INIT | CVAR_VM_NOWRITE);
+#else
+	fs_directories = Cvar_Get("fs_directories", "", CVAR_INIT | CVAR_VM_NOWRITE);
+#endif
 
 	FS_AddGameDirectories2();
 	if (fs_searchpaths == NULL)
