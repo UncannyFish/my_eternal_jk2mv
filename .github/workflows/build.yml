@@ -40,12 +40,12 @@ jobs:
       shell: cmd
       run: msbuild /m /p:Configuration=${{ matrix.build_type }} PACKAGE.vcxproj
 
-    #- uses: 'actions/upload-artifact@v3'
+    #- uses: 'actions/upload-artifact@v4'
     #  with:
     #    name: Windows Binaries (Installer), ${{ matrix.build_type }}, ${{ matrix.arch }}
     #    path: ${{github.workspace}}/build/actions/out/${{ matrix.build_type }}/*
 
-    - uses: 'actions/upload-artifact@v3'
+    - uses: 'actions/upload-artifact@v4'
       with:
         name: Windows Package (Installer), ${{ matrix.build_type }}, ${{ matrix.arch }}
         path: ${{github.workspace}}/build/actions/out/*.exe
@@ -104,12 +104,12 @@ jobs:
       shell: cmd
       run: msbuild /m /p:Configuration=${{ matrix.build_type }} PACKAGE.vcxproj
 
-    #- uses: 'actions/upload-artifact@v3'
+    #- uses: 'actions/upload-artifact@v4'
     #  with:
     #    name: Windows Binaries (Portable), ${{ matrix.build_type }}, ${{ matrix.arch }}
     #    path: ${{github.workspace}}/build/actions/out/${{ matrix.build_type }}/*
 
-    - uses: 'actions/upload-artifact@v3'
+    - uses: 'actions/upload-artifact@v4'
       if: ${{ matrix.build_type == 'RelWithDebInfo' }}
       with:
         name: Windows Package (Portable), ${{ matrix.build_type }}, ${{ matrix.arch }}
@@ -175,12 +175,12 @@ jobs:
       shell: cmd
       run: msbuild /m /p:Configuration=${{ matrix.build_type }} PACKAGE.vcxproj
 
-    #- uses: 'actions/upload-artifact@v3'
+    #- uses: 'actions/upload-artifact@v4'
     #  with:
     #    name: Windows Binaries (Portable - WinXP), ${{ matrix.build_type }}, ${{ matrix.arch }}
     #    path: ${{github.workspace}}/build/actions/out/${{ matrix.build_type }}/*
 
-    - uses: 'actions/upload-artifact@v3'
+    - uses: 'actions/upload-artifact@v4'
       if: ${{ matrix.build_type == 'RelWithDebInfo' }}
       with:
         name: Windows Package (Portable - WinXP), ${{ matrix.build_type }}, ${{ matrix.arch }}
@@ -255,12 +255,12 @@ jobs:
       shell: bash
       run: make package
 
-    #- uses: 'actions/upload-artifact@v3'
+    #- uses: 'actions/upload-artifact@v4'
     #  with:
     #    name: macOS Binaries (${{ matrix.portable }}), ${{ matrix.build_type }}, ${{ matrix.arch }}
     #    path: ${{github.workspace}}/build/actions/out/${{ matrix.build_type }}/*
 
-    - uses: 'actions/upload-artifact@v3'
+    - uses: 'actions/upload-artifact@v4'
       if: ${{ matrix.build_type == 'Release' }}
       with:
         name: macOS Package (${{ matrix.portable }}), ${{ matrix.build_type }}, ${{ matrix.arch }}
@@ -343,12 +343,12 @@ jobs:
       shell: bash
       run: podman exec -w /jk2mv/build/actions buildenv make package
 
-    #- uses: 'actions/upload-artifact@v3'
+    #- uses: 'actions/upload-artifact@v4'
     #  with:
     #    name: ${{ steps.parameters.outputs.BINARTIFACTNAME }}
     #    path: ${{github.workspace}}/build/actions/out/${{ matrix.build_type }}/*
 
-    - uses: 'actions/upload-artifact@v3'
+    - uses: 'actions/upload-artifact@v4'
       if: ${{ matrix.build_type == 'Release' }}
       with:
         name: ${{ steps.parameters.outputs.PKGARTIFACTNAME }}
@@ -386,7 +386,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - name: Rename zip for Windows XP
         run: for FILENAME in *; do mv "$FILENAME" "winXP_$FILENAME"; done
