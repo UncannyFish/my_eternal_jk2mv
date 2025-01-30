@@ -168,8 +168,26 @@ add_custom_target(assetsmv DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/assetsmv.pk3" ${
 
 if(WIN32 OR BuildPortableVersion)
 	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/assetsmv.pk3 DESTINATION "base")
+
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/directories.txt DESTINATION ".")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/base/readme.txt DESTINATION "base")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/JKA/readme.txt DESTINATION "JKA")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/MBII/readme.txt DESTINATION "MBII")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/SWGL/readme.txt DESTINATION "SWGL")
 elseif(APPLE)
 	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/assetsmv.pk3 DESTINATION "${MVMP}.app/Contents/MacOS/base")
+
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/directories.txt DESTINATION "${MVMP}.app/Contents/MacOS")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/base/readme.txt DESTINATION "${MVMP}.app/Contents/MacOS/base")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/JKA/readme.txt DESTINATION "${MVMP}.app/Contents/MacOS/JKA")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/MBII/readme.txt DESTINATION "${MVMP}.app/Contents/MacOS/MBII")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/SWGL/readme.txt DESTINATION "${MVMP}.app/Contents/MacOS/SWGL")
 else()
 	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/assetsmv.pk3 DESTINATION "share/jk2mv/base")
+
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/directories.txt DESTINATION "share/jk2mv")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/base/readme.txt DESTINATION "share/jk2mv/base")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/JKA/readme.txt DESTINATION "share/jk2mv/JKA")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/MBII/readme.txt DESTINATION "share/jk2mv/MBII")
+	install(FILES ${CMAKE_SOURCE_DIR}/assets/game_directories/SWGL/readme.txt DESTINATION "share/jk2mv/SWGL")
 endif()

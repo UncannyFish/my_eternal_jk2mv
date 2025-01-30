@@ -1,0 +1,12 @@
+// Format:
+// <game> <path> <subpath>
+// jka "C:\jka\GameData" "base"
+// jk2 "C:\jk2\GameData" "another_base"
+// Game will load "base" first, then "another_base" second
+
+jka modsjka ./
+jk2 mods ./
+jka SWGL ./
+jka MBII ./
+jka JKA ./
+jk2 base ./

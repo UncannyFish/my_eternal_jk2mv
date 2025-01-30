@@ -1,0 +1,1 @@
+Put here .pk3 files from Star Wars: Galactic Legacy
