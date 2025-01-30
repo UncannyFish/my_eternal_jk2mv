@@ -4,7 +4,7 @@
 {
 	menuDef 
 	{
-		name						"ingame_player2"
+		name						"ingame_player2_jka"
 		visible					0
 		fullscreen					0
 		outOfBoundsClick										// this closes the window if it gets a click out of the rectangle
@@ -799,8 +799,8 @@
 			action 
 			{ 
 				play			"sound/interface/esc.wav" ; 
-				close			ingame_player2 ;
-				open			ingame_player ;
+				close			ingame_player2_jka ;
+				open			ingame_player_jka ;
 			}
 
 		}
@@ -842,8 +842,8 @@
 				play			"sound/interface/button1"
 				uiScript		"updatecharmodel"
 				hide			highlights
-				close			ingame_player2
-				open			ingame_player
+				close			ingame_player2_jka
+				open			ingame_player_jka
 			}
 			mouseEnter 
 			{ 
